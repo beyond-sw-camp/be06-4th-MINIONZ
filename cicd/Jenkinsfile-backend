@@ -21,13 +21,13 @@ pipeline {
             steps {
                 script {
                     echo "Docker Build"
-                    docker build --tag minionz/backend:0.${BUILD_ID} .
+                    sh "docker build --tag minionz/backend:0.$BUILD_ID ."
 
                     echo "Docker Login"
-                    docker login -u minionz -p asdf1234~!
+                    sh "docker login -u minionz -p asdf1234~!"
 
                     echo "Docker Push"
-                    docker push minionz/backend:0.${BUILD_ID}
+                    sh "docker push minionz/backend:0.$BUILD_ID"
                 }
             }
         }
