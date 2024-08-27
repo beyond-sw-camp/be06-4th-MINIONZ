@@ -135,7 +135,7 @@ CI/CD 파이프라인은 GitHub 저장소에 `feature` 단위의 `merge`를 받�
 <br>
 <br>
 
-# Canary 무배포 방식 선택 이유
+# 📑 Canary 무배포 방식 선택 이유
 
 --- 
 
