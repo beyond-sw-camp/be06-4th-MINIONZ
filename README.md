@@ -61,7 +61,28 @@
       Kubernetes는 프라이빗 클라우드 인프라에서 안정적으로 실행될 수 있는 기능을 제공합니다. 이를 통해 서비스가 안정적으로 운영되며, 개발 및 배포 과정이 더욱 효율적으로 진행되었습니다.
 	• 클러스터 구성:
       클러스터는 마스터 노드 1대와 워커 노드 4대로 구성되었습니다. 이러한 구성은 안정적이고 확장 가능한 서비스 운영을 가능하게 하였습니다.
+<details>
+    <summary>
+<span style="font-size:150%"> k8s 전체 서비스 아키텍쳐 </span></summary>
+</br>
 
+
+<p align="center">
+	
+![시퀀스 다이어그램 - 1페이지 (2)](https://github.com/user-attachments/assets/315c3b76-cb4d-4df4-a9c8-46f108bfd8ee)
+
+</details>
+<details>
+    <summary>
+<span style="font-size:150%"> k8s 내부 서비스 아키텍쳐 </span></summary>
+</br>
+
+
+<p align="center">
+
+![시퀀스 다이어그램 - 1페이지 (1)](https://github.com/user-attachments/assets/644d96a7-c35c-4cc9-bdc7-e0f1cc76eef4)
+
+</details>
 <br>
 <br>
 
