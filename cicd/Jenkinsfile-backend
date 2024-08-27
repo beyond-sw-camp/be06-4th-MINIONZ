@@ -6,56 +6,54 @@ pipeline {
     stages {
         stage('Git Clone') {
             steps {
-                  git branch: 'backend', url: 'https://github.com/beyond-sw-camp/be06-4th-MINIONZ.git'
+                git branch: 'backend', url: 'https://github.com/beyond-sw-camp/be06-4th-MINIONZ.git'
             }
         }
         stage('Build') {
             steps {
-                echo "Add Permision"
-                chmod +x /var/lib/jenkins/workspace/backend/gradlew
+                echo "Add Permission"
+                sh 'chmod +x /var/lib/jenkins/workspace/backend/gradlew'
                 echo "Gradle Build"
-                /var/lib/jenkins/workspace/backend/gradlew bootJar
+                sh '/var/lib/jenkins/workspace/backend/gradlew bootJar'
             }
         }
         stage('Docker Build & Push') {
             steps {
                 script {
                     echo "Docker Build"
-                    sh "docker build --tag minionz/backend:0.$BUILD_ID ."
+                    sh "docker build --tag minionz/backend:0.${BUILD_ID} ."
 
                     echo "Docker Login"
-                    sh "docker login -u minionz -p asdf1234~!"
+                    sh "echo 'asdf1234~!' | docker login -u minionz --password-stdin"
 
                     echo "Docker Push"
-                    sh "docker push minionz/backend:0.$BUILD_ID"
+                    sh "docker push minionz/backend:0.${BUILD_ID}"
                 }
             }
         }
-            stage('SSH Transfer and Kubernetes Deployment') {
-                steps {
-                    script {
-                        sshPublisher(
-                            continueOnError: false,
-                            failOnError: true,
-                            publishers: [
-                                sshPublisherDesc(
-                                    configName: 'jenkins',
-                                    verbose: true,
-                                    transfers: [
-                                        sshTransfer(
-                                            sourceFiles: 'k8s-backend.yml',
-                                            remoteDirectory: '/root/',
-
-                                            execCommand: 'sed -i "s/latest/0.$BUILD_ID/g" k8s-backend.yml'
-                                        ),
-                                        sshTransfer(
-                                            execCommand: 'kubectl apply -f /home/root/k8s-backend.yml'
-                                        )
-                                    ]
-                                )
-                            ]
-                        )
-                    }
+        stage('SSH Transfer and Kubernetes Deployment') {
+            steps {
+                script {
+                    sshPublisher(
+                        continueOnError: false,
+                        failOnError: true,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'jenkins',
+                                verbose: true,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'k8s-backend.yml',
+                                        remoteDirectory: '/root/',
+                                        execCommand: "sed -i 's/latest/0.${BUILD_ID}/g' /root/k8s-backend.yml"
+                                    ),
+                                    sshTransfer(
+                                        execCommand: 'kubectl apply -f /root/k8s-backend.yml'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
                 }
             }
         }
