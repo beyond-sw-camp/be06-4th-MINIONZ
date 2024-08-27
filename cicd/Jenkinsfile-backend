@@ -12,9 +12,9 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Add Permision"
-                chmod +x /var/lib/jenkins/workspace/test/gradlew
+                chmod +x /var/lib/jenkins/workspace/backend/gradlew
                 echo "Gradle Build"
-                /var/lib/jenkins/workspace/test/gradlew bootJar
+                /var/lib/jenkins/workspace/backend/gradlew bootJar
             }
         }
         stage('Docker Build & Push') {
