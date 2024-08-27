@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     echo "Docker Build"
-                    sh "docker build --tag minionz/backend:0.${BUILD_ID} /backend"
+                    sh "docker build --tag minionz/backend:0.${BUILD_ID} ./backend"
 
                     echo "Docker Login"
                     sh "echo 'asdf1234~!' | docker login -u minionz --password-stdin"
