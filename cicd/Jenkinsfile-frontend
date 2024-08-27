@@ -11,6 +11,8 @@ pipeline {
 
                 echo "Npm Build"
                 sh'''
+                npm install
+
                 cd /var/lib/jenkins/workspace/frontend/frontend
                 npm run build
                 '''
