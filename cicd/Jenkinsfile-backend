@@ -55,7 +55,7 @@ pipeline {
                                         execCommand: "sed -i 's/latest/0.${BUILD_ID}/g' /home/minionz/cicd/k8s-backend.yml"
                                     ),
                                     sshTransfer(
-                                        execCommand: 'kubectl apply -f /home/minionz/cicd/k8s-backend.yml'
+                                        execCommand: 'kubectl apply -f /home/master/home/minionz/cicd/k8s-backend.yml'
                                     )
                                 ]
                             )
