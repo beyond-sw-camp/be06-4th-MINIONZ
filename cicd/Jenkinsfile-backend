@@ -23,14 +23,18 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    echo "Docker Build"
-                    sh "docker build --tag minionz/backend:0.${BUILD_ID} ./backend"
+                    withCredentials([
+                        usernamePassword(credentialsId: 'minionztest', usernameVariable: 'DOCKERID', passwordVariable: 'DOCKERPW')
+                    ]) {
+                        echo "Docker Build"
+                        sh "docker build --tag minionz/backend:0.${BUILD_ID} ./backend"
 
-                    echo "Docker Login"
-                    sh "echo 'asdf1234~!' | docker login -u minionz --password-stdin"
+                        echo "Docker Login"
+                        sh "docker login -u $DOCKERID -p $DOCKERPW"
 
-                    echo "Docker Push"
-                    sh "docker push minionz/backend:0.${BUILD_ID}"
+                        echo "Docker Push"
+                        sh "docker push minionz/backend:0.${BUILD_ID}"
+                    }
                 }
             }
         }
