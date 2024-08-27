@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minionz-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minionz-frontend
+  template:
+    metadata:
+      labels:
+        app: minionz-frontend
+    spec:
+      containers:
+        - name: minionz-frontend
+          image: minionz/frontend:latest
+          ports:
+            - containerPort: 3000

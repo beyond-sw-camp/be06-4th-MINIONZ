@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = "minionz/frontend:latest"
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo "Add Permission"
+                sh 'chmod +x /var/lib/jenkins/workspace/frontend/frontend'
+
+                echo "Npm Build"
+                sh "npm run build"
+            }
+        }
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'minionztest', usernameVariable: 'DOCKERID', passwordVariable: 'DOCKERPW')
+                    ]) {
+                        echo "Docker Build"
+                        sh "docker build --tag minionz/frontend:0.${BUILD_ID} ./frontend"
+
+                        echo "Docker Login"
+                        sh "docker login -u $DOCKERID -p $DOCKERPW"
+
+                        echo "Docker Push"
+                        sh "docker push minionz/frontend:0.${BUILD_ID}"
+                    }
+                }
+            }
+        }
+        stage('SSH Transfer and Kubernetes Deployment') {
+            steps {
+                script {
+                    sshPublisher(
+                        continueOnError: false,
+                        failOnError: true,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'jenkins',
+                                verbose: true,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'cicd/k8s-frontend.yml',
+                                        remoteDirectory: '/minionz/',
+                                        execCommand: "sed -i 's/latest/0.${BUILD_ID}/g' /home/master/minionz/cicd/k8s-frontend.yml"
+                                    ),
+                                    sshTransfer(
+                                        execCommand: 'kubectl apply -f /home/master/minionz/cicd/k8s-frontend.yml'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            }
+        }
+    }
+}
+
