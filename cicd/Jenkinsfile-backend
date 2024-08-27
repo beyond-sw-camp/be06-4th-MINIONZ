@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = "minionz/backend:latest"
+    }
+    stages {
+        stage('Git Clone') {
+            steps {
+                  git branch: 'backend', url: 'https://github.com/beyond-sw-camp/be06-4th-MINIONZ.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Add Permision"
+                chmod +x /var/lib/jenkins/workspace/test/gradlew
+                echo "Gradle Build"
+                /var/lib/jenkins/workspace/test/gradlew bootJar
+            }
+        }
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    echo "Docker Build"
+                    docker build --tag minionz/backend:0.$BUILD_ID .
+
+                    echo "Docker Login"
+                    docker login -u minionz -p asdf1234~!
+
+                    echo "Docker Push"
+                    docker push minionz/backend:0.$BUILD_ID
+                }
+            }
+        }
+            stage('SSH Transfer and Kubernetes Deployment') {
+                steps {
+                    script {
+                        sshPublisher(
+                            continueOnError: false,
+                            failOnError: true,
+                            publishers: [
+                                sshPublisherDesc(
+                                    configName: 'jenkins',
+                                    verbose: true,
+                                    transfers: [
+                                        sshTransfer(
+                                            sourceFiles: 'k8s-backend.yml',
+                                            remoteDirectory: '/root/',
+
+                                            execCommand: 'sed -i "s/latest/0.$BUILD_ID/g" k8s-backend.yml'
+                                        ),
+                                        sshTransfer(
+                                            execCommand: 'kubectl apply -f /home/root/k8s-backend.yml'
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
