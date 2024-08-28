@@ -61,7 +61,8 @@
 
 <p>
 	
-![시퀀스 다이어그램 - 1페이지 (2)](https://github.com/user-attachments/assets/315c3b76-cb4d-4df4-a9c8-46f108bfd8ee)
+![Group 29](https://github.com/user-attachments/assets/b67837ed-2108-42a6-a81e-e8255a44b3cb)
+
 
 </details>
 <br>
