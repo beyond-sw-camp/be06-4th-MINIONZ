@@ -90,8 +90,6 @@ pipeline {
                                             kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary-weight":"100"}}}'
                                             kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
-                                            echo "PREV_DEPLOYMENT: ${PREV_DEPLOYMENT}"
-
                                             if [ -n "$PREV_DEPLOYMENT" ]; then
                                                 echo "라?"
                                                 kubectl delete deployment "$PREV_DEPLOYMENT"
