@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     def changedFiles = sh(script: "git diff --name-only HEAD^ HEAD", returnStdout: true).trim().split('\n')
-                    IS_BACKEND_CHANGED = changedFiles.any { it.startsWith("backend/") }.toString()
+                    IS_BACKEND_CHANGED = changedFiles.any { it.contains("backend/") }.toString()
                     echo "Backend changes: ${IS_BACKEND_CHANGED}"
                 }
             }
