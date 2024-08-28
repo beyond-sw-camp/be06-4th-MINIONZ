@@ -69,8 +69,9 @@ pipeline {
                                         execCommand: '''
                                             PREV_CURRENT=$(kubectl get deployment | grep minionz-backend-v | awk '{print $1}' | sort | head -1 | sed -E 's/.*(-v[0-9]+)$/\1/' | sed 's/-//')
 
-                                            echo "PREV_VERSION: ${PREV_CURRENT}"
-
+                                            echo "실행 전"
+                                            sh "kubectl get deployment | grep minionz-backend-v | awk '{print $1}' | sort | head -1 | sed -E 's/.*(-v[0-9]+)$/\1/' | sed 's/-//'"
+                                            echo "실행 후"
                                             kubectl apply -f /home/master/minionz/cicd/k8s-backend.yml
 
                                             sleep 3
