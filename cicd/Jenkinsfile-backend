@@ -66,64 +66,37 @@ pipeline {
                                         execCommand: "sed -i 's/latest/0.${BUILD_ID}/g' /home/master/minionz/cicd/k8s-backend.yml"
                                     ),
                                     sshTransfer(
-                                        execCommand: 'kubectl apply -f /home/master/minionz/cicd/k8s-backend.yml'
+                                        execCommand: '''
+                                            kubectl apply -f /home/master/minionz/cicd/k8s-backend.yml
+
+                                            sleep 15
+
+                                            sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"50\"}]'"
+                                            sleep 15
+
+                                            sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"100\"}]'"
+
+                                            sh "kubectl delete deployment ${K8S_DEPLOYMENT_NAME}-old"
+                                            sh "kubectl delete service ${CANARY_SERVICE_NAME}-old"
+                                            sh "kubectl delete service ingress-old"
+
+                                            sh "kubectl patch ingress ingress-new -p '{\"metadata\":{\"annotations\":{\"nginx.ingress.kubernetes.io/canary\":\"false\"}}}'"
+
+                                            sh "kubectl patch deployment minionz-backend-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/name\", \"value\": \"minionz-backend-old\"}]'"
+                                            sh "kubectl patch deployment minionz-backend-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/selector/matchLabels/type\", \"value\": \"minionz-backend-old\"}]'"
+                                            sh "kubectl patch deployment minionz-backend-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/metadata/labels/type\", \"value\": \"minionz-backend-old\"}]'"
+
+                                            sh "kubectl patch service canary-backend-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/name\", \"value\": \"canary-backend-old\"}]'"
+                                            sh "kubectl patch service canary-backend-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/selector/type\", \"value\": \"minionz-backend-old\"}]'"
+
+                                            sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/name\", \"value\": \"ingress-old\"}]'"
+                                            sh "kubectl patch ingress ingress-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/rules/0/http/paths/0/backend/service/name\", \"value\": \"canary-backend-old\"}]'"
+                                            '''
                                     )
                                 ]
                             )
                         ]
                     )
-                }
-            }
-        }
-
-        stage('Monitor Canary Deployment') {
-            when {
-                expression { IS_BACKEND_CHANGED == 'true' }
-            }
-            steps {
-                script {
-                    sleep 15
-
-                    sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"50\"}]'"
-                    sleep 15
-
-                    sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"100\"}]'"
-                }
-            }
-        }
-
-        stage('Cleanup') {
-            when {
-                expression { IS_BACKEND_CHANGED == 'true' }
-            }
-
-            steps {
-                script {
-                    sh "kubectl delete deployment ${K8S_DEPLOYMENT_NAME}-old"
-                    sh "kubectl delete service ${CANARY_SERVICE_NAME}-old"
-                    sh "kubectl delete service ingress-old"
-
-                    sh "kubectl patch ingress ingress-new -p '{\"metadata\":{\"annotations\":{\"nginx.ingress.kubernetes.io/canary\":\"false\"}}}'"
-                }
-            }
-        }
-
-        stage('Update Names') {
-            when {
-                expression { IS_BACKEND_CHANGED == 'true' }
-            }
-
-            steps {
-                script {
-                    sh "kubectl patch deployment minionz-backend-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/name\", \"value\": \"minionz-backend-old\"}]'"
-                    sh "kubectl patch deployment minionz-backend-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/selector/matchLabels/type\", \"value\": \"minionz-backend-old\"}]'"
-                    sh "kubectl patch deployment minionz-backend-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/template/metadata/labels/type\", \"value\": \"minionz-backend-old\"}]'"
-
-                    sh "kubectl patch service canary-backend-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/name\", \"value\": \"canary-backend-old\"}]'"
-                    sh "kubectl patch service canary-backend-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/selector/type\", \"value\": \"minionz-backend-old\"}]'"
-
-                    sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/name\", \"value\": \"ingress-old\"}]'"
-                    sh "kubectl patch ingress ingress-old --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/rules/0/http/paths/0/backend/service/name\", \"value\": \"canary-backend-old\"}]'"
                 }
             }
         }
