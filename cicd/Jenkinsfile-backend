@@ -70,6 +70,7 @@ pipeline {
                                             PREV_CURRENT=$(kubectl get deployment | grep minionz-backend-v | awk '{print $1}' | sort | head -1)
                                             PREV_VERSION=$(echo $PREV_CURRENT | sed -E 's/.*-v([0-9]+)$/\1/')
 
+                                            echo "PREV_CURRENT: ${PREV_CURRENT}"
                                             echo "PREV_VERSION : ${PREV_VERSION}"
 
                                             kubectl apply -f /home/master/minionz/cicd/k8s-backend.yml
