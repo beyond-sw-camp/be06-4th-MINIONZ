@@ -78,10 +78,11 @@ pipeline {
 
 
                                             sleep 3
-                                            sh "kubectl patch ingress ingress-v${BUILD_ID} -p '{\"metadata\": {\"annotations\": {\"nginx.ingress.kubernetes.io/canary-weight\": \"50\"}}}'"
+                                            sh "kubectl patch ingress ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary-weight":"50"}}}' "
 
                                             sleep 3
-                                            sh "kubectl patch ingress ingress-v${BUILD_ID} -p '{\"metadata\": {\"annotations\": {\"nginx.ingress.kubernetes.io/canary-weight\": \"100\"}}}'"
+                                            sh '''
+                                            kubectl patch ingress ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary-weight":"100"}}}'
                                             kubectl patch ingress ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
                                             echo "PREV_DEPLOYMENT: ${PREV_DEPLOYMENT}"
