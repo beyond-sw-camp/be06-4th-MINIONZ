@@ -16,6 +16,8 @@ pipeline {
         }
 
         stage('Build') {
+            echo "hi! ${IS_FRONTEND_CHANGED}"
+
             when {
                 expression { IS_FRONTEND_CHANGED == 'true' }
             }
