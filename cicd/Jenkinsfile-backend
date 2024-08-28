@@ -12,6 +12,7 @@ pipeline {
             steps {
                 script {
                     def changedFiles = sh(script: "git diff --name-only HEAD^ HEAD", returnStdout: true).trim().split('\n')
+                    echo "이거 봐바 : ${changedFiles}"
                     IS_BACKEND_CHANGED = changedFiles.any { it.startsWith("backend/") }.toString()
                     echo "Backend changes: ${IS_BACKEND_CHANGED}"
                 }
@@ -22,6 +23,7 @@ pipeline {
             when {
                 expression { IS_BACKEND_CHANGED == 'true' }
             }
+
             steps {
                 echo "Add Permission"
                 sh 'chmod +x /var/lib/jenkins/workspace/backend/backend/gradlew'
