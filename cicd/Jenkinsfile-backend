@@ -92,7 +92,8 @@ pipeline {
 
                                             echo "PREV_DEPLOYMENT: ${PREV_DEPLOYMENT}"
 
-                                            if kubectl get deployment ${PREV_DEPLOYMENT}; then
+                                            if kubectl get deployment ${PREV_DEPLOYMENT} != ""; then
+                                                echo "라?"
                                                 kubectl delete deployment ${PREV_DEPLOYMENT}
                                                 kubectl delete service ${PREV_SERVICE}
                                                 kubectl delete ingress ${PREV_INGRESS}
