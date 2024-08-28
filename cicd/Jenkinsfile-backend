@@ -63,7 +63,7 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: 'cicd/k8s-backend.yml',
                                         remoteDirectory: '/minionz/',
-                                        execCommand: "sed -i 's/latest/0.${BUILD_ID}; s/vlatest/v${BUILD_ID}/g' /home/master/minionz/cicd/k8s-backend.yml"
+                                        execCommand: "sed -i 's/latest/0.${BUILD_ID}/g; s/vlatest/v${BUILD_ID}/g' /home/master/minionz/cicd/k8s-backend.yml"
                                     ),
                                     sshTransfer(
                                         execCommand: '''
