@@ -82,7 +82,7 @@ pipeline {
                                                 # 디플로이먼트가 존재할 경우 아래 코드 실행
                                                 kubectl delete deployment minionz-backend-old
                                                 kubectl delete service canary-backend-old
-                                                kubectl delete service ingress-old
+                                                kubectl delete ingress ingress-old
                                             else
                                                 echo "Deployment minionz-backend-old does not exist. Skipping the deletion and patching steps."
                                             fi
