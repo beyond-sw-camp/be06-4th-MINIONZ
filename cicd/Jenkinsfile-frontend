@@ -8,12 +8,6 @@ pipeline {
         PREV_INGRESS = ""
     }
     stages {
-        stage('git clone') {
-                steps {
-                        git branch: 'frontend', url: 'https://github.com/beyond-sw-camp/be06-4th-MINIONZ'
-                }
-        }
-
         stage('Check for Frontend Changes') {
             steps {
                 script {
@@ -102,12 +96,13 @@ pipeline {
 
                                             echo "PREV_DEPLOYMENT: ${PREV_DEPLOYMENT}"
 
-                                            if kubectl get deployment ${PREV_DEPLOYMENT}; then
-                                                kubectl delete deployment ${PREV_DEPLOYMENT}
-                                                kubectl delete service ${PREV_SERVICE}
-                                                kubectl delete ingress ${PREV_INGRESS}
+                                           if [ -n "$PREV_DEPLOYMENT" ]; then
+                                                echo "라?"
+                                                kubectl delete deployment "$PREV_DEPLOYMENT"
+                                                kubectl delete service "$PREV_SERVICE"
+                                                kubectl delete ingress "$PREV_INGRESS"
                                             else
-                                                echo "바꿀 거 없음"
+                                                echo "바꿀 거 없음!"
                                             fi
                                             '''
                                     )
