@@ -98,7 +98,7 @@ pipeline {
                                             echo "PREV_DEPLOYMENT: ${PREV_DEPLOYMENT}"
 
                                            if [ -n "$PREV_DEPLOYMENT" ]; then
-                                                echo "기능 테스트 영상 촬영"
+                                                echo "기능 테스트 영상 촬영!"
                                                 kubectl delete deployment "$PREV_DEPLOYMENT"
                                                 kubectl delete service "$PREV_SERVICE"
                                                 kubectl delete ingress "$PREV_INGRESS"
