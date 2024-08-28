@@ -2,23 +2,12 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "minionz/backend:latest"
-        IS_BACKEND_CHANGED = 'false'
+        IS_BACKEND_CHANGED = 'true'
         K8S_DEPLOYMENT_NAME = "minionz-backend"
         CANARY_SERVICE_NAME = "canary-backend"
     }
 
     stages {
-        stage('Check for Backend Changes') {
-            steps {
-                script {
-                    def changedFiles = sh(script: "git diff --name-only HEAD^ HEAD", returnStdout: true).trim().split('\n')
-                    echo "이거 봐바 : ${changedFiles}"
-                    IS_BACKEND_CHANGED = changedFiles.any { it.startsWith("backend/") }.toString()
-                    echo "Backend changes: ${IS_BACKEND_CHANGED}"
-                }
-            }
-        }
-
         stage('Build') {
             when {
                 expression { IS_BACKEND_CHANGED == 'true' }
