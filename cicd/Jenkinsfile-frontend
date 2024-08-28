@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build') {
             when {
-                expression { ${IS_FRONTEND_CHANGED} == 'true' }
+                expression { $IS_FRONTEND_CHANGED == 'true' }
             }
 
             steps {
