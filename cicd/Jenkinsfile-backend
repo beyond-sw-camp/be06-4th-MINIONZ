@@ -4,13 +4,8 @@ pipeline {
         DOCKER_IMAGE = "minionz/backend:latest"
         IS_BACKEND_CHANGED = 'false'
     }
-    stages {
-        stage('Git Clone') {
-            steps {
-                git branch: 'backend', url: 'https://github.com/beyond-sw-camp/be06-4th-MINIONZ.git'
-            }
-        }
 
+    stages {
         stage('Check for Backend Changes') {
             steps {
                 script {
