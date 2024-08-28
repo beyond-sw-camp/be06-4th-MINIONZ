@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "minionz/backend:latest"
+        IS_BACKEND_CHANGED = 'false'
     }
     stages {
         stage('Git Clone') {
