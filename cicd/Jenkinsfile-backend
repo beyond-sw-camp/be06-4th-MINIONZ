@@ -94,7 +94,7 @@ pipeline {
                                                 echo "!!!!나 없음"
                                             fi
 
-                                            kubectl patch deployment minionz-backend-new -p '{"metadata": { "name": "minionz-backend-old"}}'
+                                            kubectl patch deployment minionz-backend-new -p '{"metadata": { "name": 'minionz-backend-old'}}'
                                             kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/matchLabels/type", "value": "minionz-backend-old"}]'
                                             kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/type", "value": "minionz-backend-old"}]'
 
