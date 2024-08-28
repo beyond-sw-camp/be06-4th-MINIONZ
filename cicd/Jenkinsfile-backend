@@ -76,27 +76,26 @@ pipeline {
 
                                             sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"100\"}]'"
 
+                                              kubectl patch ingress ingress-new -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
+
                                             if kubectl get deployment ${K8S_DEPLOYMENT_NAME}-old; then
-                                                echo "나 없어"
                                                 # 디플로이먼트가 존재할 경우 아래 코드 실행
                                                 kubectl delete deployment ${K8S_DEPLOYMENT_NAME}-old
                                                 kubectl delete service ${CANARY_SERVICE_NAME}-old
                                                 kubectl delete service ingress-old
-
-                                                kubectl patch ingress ingress-new -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
-
-                                                kubectl patch deployment minionz-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "minionz-backend-old"}]'
-                                                kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/matchLabels/type", "value": "minionz-backend-old"}]'
-                                                kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/type", "value": "minionz-backend-old"}]'
-
-                                                kubectl patch service canary-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "canary-backend-old"}]'
-                                                kubectl patch service canary-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/type", "value": "minionz-backend-old"}]'
-
-                                                kubectl patch ingress ingress-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "ingress-old"}]'
-                                                kubectl patch ingress ingress-old --type='json' -p='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/service/name", "value": "canary-backend-old"}]'
                                             else
                                                 echo "Deployment ${K8S_DEPLOYMENT_NAME}-old does not exist. Skipping the deletion and patching steps."
                                             fi
+
+                                            kubectl patch deployment minionz-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "minionz-backend-old"}]'
+                                            kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/matchLabels/type", "value": "minionz-backend-old"}]'
+                                            kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/type", "value": "minionz-backend-old"}]'
+
+                                            kubectl patch service canary-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "canary-backend-old"}]'
+                                            kubectl patch service canary-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/type", "value": "minionz-backend-old"}]'
+
+                                            kubectl patch ingress ingress-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "ingress-old"}]'
+                                            kubectl patch ingress ingress-old --type='json' -p='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/service/name", "value": "canary-backend-old"}]'
                                             '''
                                     )
                                 ]
