@@ -6,13 +6,13 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      type: minionz-frontend
+      app: minionz-frontend
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        type: minionz-frontend
+        app: minionz-frontend
     spec:
       containers:
         - name: minionz-frontend
@@ -27,7 +27,7 @@ metadata:
   name: frontend-svc
 spec:
   selector:
-    type: minionz-frontend
+    app: minionz-frontend
   ports:
     - port: 80
       name: "svc80"
