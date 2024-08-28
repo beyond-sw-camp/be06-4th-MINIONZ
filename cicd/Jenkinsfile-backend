@@ -4,7 +4,7 @@ pipeline {
         DOCKER_IMAGE = "minionz/backend:latest"
         IS_BACKEND_CHANGED = 'true'
         PREV_CURRENT = ""
-        PREV_VERSION = ""
+        PREV_VERSION = 0
     }
 
     stages {
