@@ -76,7 +76,7 @@ pipeline {
 
                                             sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"100\"}]'"
 
-                                              kubectl patch ingress ingress-new -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
+                                            kubectl patch ingress ingress-new -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
                                             if kubectl get deployment minionz-backend-old; then
                                                 # 디플로이먼트가 존재할 경우 아래 코드 실행
@@ -94,7 +94,7 @@ pipeline {
                                                 echo "!!!!나 없음"
                                             fi
 
-                                            kubectl patch deployment minionz-backend-new -p '{"metadata": { "name": 'minionz-backend-old'}}'
+                                            kubectl patch deployment minionz-backend-new -p '{"metadata": {"name": "minionz-backend-old"}}'
                                             kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/matchLabels/type", "value": "minionz-backend-old"}]'
                                             kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/type", "value": "minionz-backend-old"}]'
 
