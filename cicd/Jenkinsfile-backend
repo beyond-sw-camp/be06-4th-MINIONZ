@@ -92,11 +92,11 @@ pipeline {
 
                                             echo "PREV_DEPLOYMENT: ${PREV_DEPLOYMENT}"
 
-                                            if ${PREV_DEPLOYMENT} != ""; then
+                                            if [ -n "$PREV_DEPLOYMENT" ]; then
                                                 echo "라?"
-                                                kubectl delete deployment ${PREV_DEPLOYMENT}
-                                                kubectl delete service ${PREV_SERVICE}
-                                                kubectl delete ingress ${PREV_INGRESS}
+                                                kubectl delete deployment "$PREV_DEPLOYMENT"
+                                                kubectl delete service "$PREV_SERVICE"
+                                                kubectl delete ingress "$PREV_INGRESS"
                                             else
                                                 echo "바꿀 거 없음!"
                                             fi
