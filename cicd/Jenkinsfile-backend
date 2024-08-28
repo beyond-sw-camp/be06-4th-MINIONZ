@@ -3,8 +3,8 @@ pipeline {
     environment {
         DOCKER_IMAGE = "minionz/backend:latest"
         IS_BACKEND_CHANGED = 'true'
-        K8S_DEPLOYMENT_NAME = "minionz-backend"
-        CANARY_SERVICE_NAME = "canary-backend"
+        PREV_CURRENT = ""
+        PREV_VERSION = 0
     }
 
     stages {
@@ -63,46 +63,29 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: 'cicd/k8s-backend.yml',
                                         remoteDirectory: '/minionz/',
-                                        execCommand: "sed -i 's/latest/0.${BUILD_ID}/g' /home/master/minionz/cicd/k8s-backend.yml"
+                                        execCommand: "sed -i 's/latest/0.${BUILD_ID}/vlatest/v${BUILD_ID}/g' /home/master/minionz/cicd/k8s-backend.yml"
                                     ),
                                     sshTransfer(
                                         execCommand: '''
                                             kubectl apply -f /home/master/minionz/cicd/k8s-backend.yml
 
                                             sleep 3
+                                            sh "kubectl patch ingress ingress-new -p '{\"metadata\": {\"annotations\": {\"nginx.ingress.kubernetes.io/canary-weight\": \"50\"}}}'"
 
-                                            sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"50\"}]'"
                                             sleep 3
-
-                                            sh "kubectl patch ingress ingress-new --type='json' -p='[{\"op\": \"replace\", \"path\": \"/metadata/annotations/nginx.ingress.kubernetes.io/canary-weight\", \"value\": \"100\"}]'"
-
+                                            sh "kubectl patch ingress ingress-new -p '{\"metadata\": {\"annotations\": {\"nginx.ingress.kubernetes.io/canary-weight\": \"100\"}}}'"
                                             kubectl patch ingress ingress-new -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
-                                            if kubectl get deployment minionz-backend-old; then
-                                                # 디플로이먼트가 존재할 경우 아래 코드 실행
-                                                kubectl delete deployment minionz-backend-old
-                                                kubectl delete service canary-backend-old
-                                                kubectl delete ingress ingress-old
+                                            PREV_CURRENT = `kubectl get deployment | grep minionz-backend | awk '{print $1}' | sort | head -1`
+                                            PREV_VERSION=$(echo $version | sed -E 's/.*-v([0-9]+)/\1/')
+
+                                            if kubectl get deployment minionz-backend-v${PREV_VERSION}; then
+                                                kubectl delete deployment minionz-backend-v${PREV_VERSION}
+                                                kubectl delete service canary-backend-v${PREV_VERSION}
+                                                kubectl delete ingress ingress-v${PREV_VERSION}
                                             else
-                                                echo "Deployment minionz-backend-old does not exist. Skipping the deletion and patching steps."
+                                                echo "바꿀 거 없음"
                                             fi
-
-
-                                            if kubectl get deployment minionz-backend-new; then
-                                                echo "!!!!나 있음"
-                                            else
-                                                echo "!!!!나 없음"
-                                            fi
-
-                                            kubectl patch deployment minionz-backend-new -p '{"metadata": {"name": "minionz-backend-old"}}'
-                                            kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/matchLabels/type", "value": "minionz-backend-old"}]'
-                                            kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/type", "value": "minionz-backend-old"}]'
-
-                                            kubectl patch service canary-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "canary-backend-old"}]'
-                                            kubectl patch service canary-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/type", "value": "minionz-backend-old"}]'
-
-                                            kubectl patch ingress ingress-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "ingress-old"}]'
-                                            kubectl patch ingress ingress-old --type='json' -p='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/service/name", "value": "canary-backend-old"}]'
                                             '''
                                     )
                                 ]
