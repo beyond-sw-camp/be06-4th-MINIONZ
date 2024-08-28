@@ -87,15 +87,22 @@ pipeline {
                                                 echo "Deployment minionz-backend-old does not exist. Skipping the deletion and patching steps."
                                             fi
 
-                                            kubectl edit deployment minionz-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "minionz-backend-old"}]'
-                                            kubectl edit deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/matchLabels/type", "value": "minionz-backend-old"}]'
-                                            kubectl edit deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/type", "value": "minionz-backend-old"}]'
 
-                                            kubectl edit service canary-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "canary-backend-old"}]'
-                                            kubectl edit service canary-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/type", "value": "minionz-backend-old"}]'
+                                            if kubectl get deployment minionz-backend-new; then
+                                                echo "!!!!나 있음"
+                                            else
+                                                echo "!!!!나 없음"
+                                            fi
 
-                                            kubectl edit ingress ingress-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "ingress-old"}]'
-                                            kubectl edit ingress ingress-old --type='json' -p='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/service/name", "value": "canary-backend-old"}]'
+                                            kubectl patch deployment minionz-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "minionz-backend-old"}]'
+                                            kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/matchLabels/type", "value": "minionz-backend-old"}]'
+                                            kubectl patch deployment minionz-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/template/metadata/labels/type", "value": "minionz-backend-old"}]'
+
+                                            kubectl patch service canary-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "canary-backend-old"}]'
+                                            kubectl patch service canary-backend-old --type='json' -p='[{"op": "replace", "path": "/spec/selector/type", "value": "minionz-backend-old"}]'
+
+                                            kubectl patch ingress ingress-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "ingress-old"}]'
+                                            kubectl patch ingress ingress-old --type='json' -p='[{"op": "replace", "path": "/spec/rules/0/http/paths/0/backend/service/name", "value": "canary-backend-old"}]'
                                             '''
                                     )
                                 ]
