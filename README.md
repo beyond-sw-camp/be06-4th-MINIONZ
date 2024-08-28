@@ -6,8 +6,6 @@
 팀장: 차윤슬 <br>
 팀원: 박성준, 최승은, 강혜정, 지연희
 
----
-
 |                     **차윤슬**                      |                  **박성준**                   |                 **최승은**                  |                     **강혜정**                     |             **지연희**              |
 |:------------------------------------------------:|:------------------------------------------:|:----------------------------------------:|:-----------------------------------------------:|:--------------------------------:|
 | <img src="https://soopool.art/img/infoacna/i/Judy/192px-Judy's_Poster_NH_Texture.png" width="128px"/> | <img src="https://soopool.art/img/infoacna/i/Ace/128px-Ace's_Poster_NH_Texture.png"/> | <img src="https://soopool.art/img/infoacna/i/Rio/128px-Rio's_Poster_NH_Texture.png"/> | <img src="https://soopool.art/img/infoacna/i/Felicity/128px-Felicity's_Poster_NH_Texture.png"/> | <img src="https://soopool.art/img/infoacna/i/Rosie/128px-Rosie's_Poster_NH_Texture.png"/> |
@@ -21,7 +19,6 @@
 
 빠른 개발 속도와 품질 향상
 
----
 	1. 개발 속도 향상
        CI/CD를 통해 개발자들이 코드를 더욱 빠르게 통합하고 배포할 수 있습니다. 자동화된 프로세스로 인해 통합과 배포가 간소화되어 전체 개발 주기가 단축됩니다.
 	2. 자동화된 프로세스:
@@ -33,24 +30,20 @@
 
 # ⚒️ 기술 스택
 
----
-
 ### CI/CD
 
-<img src="https://img.shields.io/badge/Git-000?style=style&logo=Git&logoColor=F05032&color=white"> <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=black&color=white"> <img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins&logoColor=D24939&color=white"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=2496ed&color=white"/><img src="https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=Kubernetes&logoColor=326ce5&color=white"/>
+<img src="https://img.shields.io/badge/Git-000?style=style&logo=Git&logoColor=F05032&color=white" alt=""> <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=black&color=white" alt=""> <img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins&logoColor=D24939&color=white" alt=""/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=2496ed&color=white" alt=""/> <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=Kubernetes&logoColor=326ce5&color=white" alt=""/>
 
 ### 모니터링
-<img src="https://img.shields.io/badge/Prometheus-181717?style=flat&logo=Prometheus&logoColor=E6522C&color=white"> <img src="https://img.shields.io/badge/Grafana-181717?style=flat&logo=Grafana&logoColor=F46800&color=white">
+<img src="https://img.shields.io/badge/Prometheus-181717?style=flat&logo=Prometheus&logoColor=E6522C&color=white" alt=""> <img src="https://img.shields.io/badge/Grafana-181717?style=flat&logo=Grafana&logoColor=F46800&color=white" alt="">
 
 ### 웹 애플리케이션 프로그램
-<img src="https://img.shields.io/badge/Vue-181717?style=flat&logo=Vue.js&logoColor=4FC08D&color=white"> <img src="https://img.shields.io/badge/SpringBoot-181717?style=flat&logo=SpringBoot&logoColor=6DB33F&color=white">
+<img src="https://img.shields.io/badge/Vue-181717?style=flat&logo=Vue.js&logoColor=4FC08D&color=white" alt=""> <img src="https://img.shields.io/badge/NGINX-181717?style=flat&logo=NGINX&logoColor=009639&color=white" alt=""> <img src="https://img.shields.io/badge/SpringBoot-181717?style=flat&logo=SpringBoot&logoColor=6DB33F&color=white" alt="">
 
 <br>
 <br>
 
 # 🌏 Devops 운영 환경
-
----
 
 ### Kubernetes 클러스터 노드 구성
 💻 Master 1대, 💻 Worker 4대의 클러스터 구성<br>
@@ -66,18 +59,16 @@
 <span style="font-size:150%"> k8s 전체 서비스 아키텍쳐 </span></summary>
 
 
-<p align="center">
+<p>
 	
 ![시퀀스 다이어그램 - 1페이지 (2)](https://github.com/user-attachments/assets/315c3b76-cb4d-4df4-a9c8-46f108bfd8ee)
 
 </details>
 <details>
-    <summary>
-<span style="font-size:150%"> k8s 내부 서비스 아키텍쳐 </span></summary>
-
-
-
-<p align="center">
+<summary>
+<span style="font-size:150%"> k8s 내부 서비스 아키텍쳐 </span>
+</summary>
+<p>
 
 ![시퀀스 다이어그램 - 1페이지 (1)](https://github.com/user-attachments/assets/644d96a7-c35c-4cc9-bdc7-e0f1cc76eef4)
 
@@ -88,8 +79,6 @@
 # 📽️ CI/CD 시나리오
 
 GitHub, Jenkins, Docker, Kubernetes를 활용하여 프론트엔드와 백엔드 애플리케이션을 각각 자동화하는 과정의 시나리오입니다.
-
----
 
 #### 1. 프로젝트 개요
 프론트엔드(Vue)와 백엔드(SpringBoot)로 구성된 웹 애플리케이션입니다.
@@ -106,14 +95,16 @@ CI/CD 파이프라인은 GitHub 저장소에 `feature` 단위의 `merge`를 받�
 #### 3. CI/CD 파이프라인 단계
 
 ##### 1) GitHub 웹훅 트리거
-- **상황**: GitHub의  코드를 푸시하거나 Pull Request(PR)를 생성합니다.
-- **결과**: GitHub에서 설정된 웹훅을 통해 Jenkins 서버로 이벤트가 전달됩니다. Jenkins는 이 이벤트를 감지하고 해당 프로젝트의 파이프라인을 트리거합니다.
+
+- **상황**: 개발자가 GitHub에 코드를 푸시하거나 Pull Request(PR)를 생성하면, GitHub에 설정된 웹훅이 이 이벤트를 감지합니다. 웹훅은 GitHub 리포지토리에서 발생한 특정 이벤트를 외부 시스템으로 전달하는 역할을 합니다.
+- **과정**: GitHub에서 발생한 이벤트는 설정된 웹훅을 통해 Jenkins 서버로 전달됩니다. Jenkins 서버는 이 이벤트를 수신하고, 이를 기반으로 미리 정의된 CI/CD 파이프라인을 자동으로 시작합니다.
+- **결과**: Jenkins는 GitHub 웹훅에서 전달된 이벤트를 감지하고, 해당 프로젝트의 빌드 및 배포를 위한 파이프라인을 트리거하여, 자동화된 프로세스를 시작하게 됩니다. 이로 인해 개발자는 수동 개입 없이 코드 변경 사항이 자동으로 빌드 및 배포 과정에 반영되는 것을 보장할 수 있습니다.
 
 ##### 2) 코드 체크아웃
 - **상황**: Jenkins 파이프라인이 시작되면, 첫 번째 단계로 GitHub 저장소에서 최신 코드를 가져옵니다.
 - **결과**: 프론트엔드와 백엔드 각각에 대해 코드가 Jenkins 워크스페이스로 체크아웃됩니다.
 
-##### 3) 빌드 및 테스트
+##### 3) 빌드
 - **프론트엔드**:
     - **상황**: Jenkins는 Node.js 환경에서 `npm install`을 실행하여 필요한 의존성을 설치한 후, `npm run build` 명령어를 사용해 빌드합니다.
 
