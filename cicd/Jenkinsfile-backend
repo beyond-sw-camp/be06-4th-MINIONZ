@@ -70,7 +70,7 @@ pipeline {
                                             echo "PREV_VERSION 1: ${PREV_VERSION}"
 
                                             PREV_CURRENT=$(kubectl get deployment | grep minionz-backend-v | awk '{print $1}' | sort | head -1)
-                                            PREV_VERSION=$($PREV_CURRENT | sed -E 's/.*-v([0-9]+)$/\1/')
+                                            PREV_VERSION=$(echo $PREV_CURRENT | sed -E 's/.*-v([0-9]+)$/\1/')
 
                                             echo "PREV_CURRENT : ${PREV_CURRENT}"
                                             echo "PREV_VERSION 2: ${PREV_VERSION}"
