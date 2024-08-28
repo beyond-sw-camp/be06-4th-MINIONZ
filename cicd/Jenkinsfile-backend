@@ -72,6 +72,8 @@ pipeline {
                                             PREV_CURRENT=$(kubectl get deployment | grep minionz-backend | awk '{print $1}' | sort | head -1)
                                             PREV_VERSION=$(echo $PREV_CURRENT | sed -E 's/.*-v([0-9]+)$/\1/')
 
+                                            echo "PREV_VERSION : ${PREV_VERSION}"
+
                                             sleep 3
                                             sh "kubectl patch ingress ingress-v${PREV_VERSION} -p '{\"metadata\": {\"annotations\": {\"nginx.ingress.kubernetes.io/canary-weight\": \"50\"}}}'"
 
