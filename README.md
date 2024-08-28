@@ -64,15 +64,6 @@
 ![시퀀스 다이어그램 - 1페이지 (2)](https://github.com/user-attachments/assets/315c3b76-cb4d-4df4-a9c8-46f108bfd8ee)
 
 </details>
-<details>
-<summary>
-<span style="font-size:150%"> k8s 내부 서비스 아키텍쳐 </span>
-</summary>
-<p>
-
-![시퀀스 다이어그램 - 1페이지 (1)](https://github.com/user-attachments/assets/644d96a7-c35c-4cc9-bdc7-e0f1cc76eef4)
-
-</details>
 <br>
 <br>
 
