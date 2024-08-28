@@ -3,7 +3,9 @@ pipeline {
     environment {
         DOCKER_IMAGE = "minionz/backend:latest"
         IS_BACKEND_CHANGED = 'true'
-        PREV_CURRENT = ""
+        PREV_DEPLOYMENT = ""
+        PREV_SERVICE = ""
+        PREV_INGRESS = ""
         PREV_VERSION = ""
     }
 
@@ -67,27 +69,24 @@ pipeline {
                                     ),
                                     sshTransfer(
                                         execCommand: '''
-                                            echo "PREV_VERSION 1: ${PREV_VERSION}"
 
-                                            PREV_CURRENT=$(kubectl get deployment | grep minionz-backend-v | awk '{print $1}' | sort | head -1)
-                                            PREV_VERSION=$(echo ${PREV_CURRENT} | grep -o 'v[0-9]\+' | cut -d'v' -f2)
-
-                                            echo "PREV_CURRENT : ${PREV_CURRENT}"
-                                            echo "PREV_VERSION 2: ${PREV_VERSION}"
+                                            PREV_DEPLOYMENT=$(kubectl get deployment | grep minionz-backend-v | awk '{print $1}' | sort | head -1)
+                                            PREV_SERVICE=$(kubectl get service | grep canary-backend-v | awk '{print $1}' | sort | head -1)
+                                            PREV_INGRESS=$(kubectl get ingress | grep ingress-v | awk '{print $1}' | sort | head -1)
 
                                             kubectl apply -f /home/master/minionz/cicd/k8s-backend.yml
 
                                             sleep 3
-                                            kubectl patch ingress ingress-v${PREV_VERSION} -p '{"metadata": {"annotations": {"nginx.ingress.kubernetes.io/canary-weight": "50"}}}'
+                                            sh "kubectl patch ingress ${PREV_INGRESS} -p '{\"metadata\": {\"annotations\": {\"nginx.ingress.kubernetes.io/canary-weight\": \"50\"}}}'"
 
                                             sleep 3
-                                            kubectl patch ingress ingress-v${PREV_VERSION} -p '{"metadata": {"annotations": {"nginx.ingress.kubernetes.io/canary-weight": "100"}}}'
-                                            kubectl patch ingress ingress-v${PREV_VERSION} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
+                                            sh "kubectl patch ingress ${PREV_INGRESS} -p '{\"metadata\": {\"annotations\": {\"nginx.ingress.kubernetes.io/canary-weight\": \"100\"}}}'"
+                                            kubectl patch ingress ${PREV_INGRESS} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
-                                            if kubectl get deployment minionz-backend-v${PREV_VERSION}; then
-                                                kubectl delete deployment minionz-backend-v${PREV_VERSION}
-                                                kubectl delete service canary-backend-v${PREV_VERSION}
-                                                kubectl delete ingress ingress-v${PREV_VERSION}
+                                            if kubectl get deployment ${PREV_DEPLOYMENT}; then
+                                                kubectl delete deployment ${PREV_DEPLOYMENT}
+                                                kubectl delete service ${PREV_SERVICE}
+                                                kubectl delete ingress ${PREV_INGRESS}
                                             else
                                                 echo "바꿀 거 없음"
                                             fi
