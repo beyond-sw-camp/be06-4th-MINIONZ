@@ -78,13 +78,13 @@ pipeline {
 
                                               kubectl patch ingress ingress-new -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
-                                            if kubectl get deployment ${K8S_DEPLOYMENT_NAME}-old; then
+                                            if kubectl get deployment minionz-backend-old; then
                                                 # 디플로이먼트가 존재할 경우 아래 코드 실행
-                                                kubectl delete deployment ${K8S_DEPLOYMENT_NAME}-old
-                                                kubectl delete service ${CANARY_SERVICE_NAME}-old
+                                                kubectl delete deployment minionz-backend-old
+                                                kubectl delete service canary-backend-old
                                                 kubectl delete service ingress-old
                                             else
-                                                echo "Deployment ${K8S_DEPLOYMENT_NAME}-old does not exist. Skipping the deletion and patching steps."
+                                                echo "Deployment minionz-backend-old does not exist. Skipping the deletion and patching steps."
                                             fi
 
                                             kubectl patch deployment minionz-backend-new --type='json' -p='[{"op": "replace", "path": "/metadata/name", "value": "minionz-backend-old"}]'
