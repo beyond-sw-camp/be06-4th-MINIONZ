@@ -5,16 +5,14 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
+console.log("v2");
 
 export default {
   name: "App",
   components: {
     HelloWorld,
   },
-  created() {
-    console.log("v1");
-  },
-  computed: {},
+
 };
 
 </script>
