@@ -83,10 +83,10 @@ pipeline {
 
                                             kubectl apply -f /home/master/minionz/cicd/k8s-backend.yml
 
-                                            sleep 3
+                                            sleep 15
                                             kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary-weight":"50"}}}'
 
-                                            sleep 3
+                                            sleep 15
                                             kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary-weight":"100"}}}'
                                             kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
