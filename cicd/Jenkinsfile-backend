@@ -88,9 +88,7 @@ pipeline {
 
                                             sleep 40
                                             kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary-weight":"100"}}}'
-
-                                            sleep 10
-                                            kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
+                                            kubectl patch ingress ${PREV_INGRESS} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
                                             if [ -n "$PREV_DEPLOYMENT" ]; then
                                                 echo "테스트 영상!! "
