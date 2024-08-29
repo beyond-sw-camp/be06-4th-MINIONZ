@@ -170,7 +170,7 @@ CI/CD 파이프라인은 GitHub 저장소에 `feature` 단위의 `merge`를 받�
 ### ✨BACKEND
 
 <details>
-  <summary><b>Backend Canary 무중단 배포</b></summary>
+  <summary><b>Canary 무중단 배포</b></summary>
   <div markdown="1">
    <br>
     <ul>
