@@ -91,7 +91,7 @@ pipeline {
                                             kubectl patch ingress backend-ingress-v${BUILD_ID} -p '{"metadata":{"annotations":{"nginx.ingress.kubernetes.io/canary":"false"}}}'
 
                                             if [ -n "$PREV_DEPLOYMENT" ]; then
-                                                echo "테스트 영상! "
+                                                echo "테스트 영상!! "
                                                 kubectl delete deployment "$PREV_DEPLOYMENT"
                                                 kubectl delete service "$PREV_SERVICE"
                                                 kubectl delete ingress "$PREV_INGRESS"
