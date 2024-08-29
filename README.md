@@ -107,13 +107,10 @@ CI/CD 파이프라인은 GitHub 저장소에 `feature` 단위의 `merge`를 받�
 - **상황**: 빌드가 완료된 후, Jenkins는 Docker 이미지를 생성합니다. Dockerfile을 기반으로 각각의 애플리케이션(프론트엔드, 백엔드)에 대해 이미지를 빌드합니다.
 - **결과**: 빌드된 Docker 이미지는 지정된 Docker Hub로 푸시됩니다. 이때 각 이미지의 tage name은 Jenkins 빌드 횟수를 기준으로 지정됩니다.
 
-##### 5) Kubernetes 배포
-- **상황**:  Jenkins는 Kubernetes 클러스터에 해당 이미지를 배포합니다. 각 파이프라인은 Kubernetes YAML 파일(`k8s-frontend.yml`, `k8s-backend.yml`)을 사용해 Deployment와 Service를 정의합니다.
-- **결과**: Kubernetes 클러스터에서 새로운 버전의 애플리케이션이 배포되며 최신 이미지를 가져옵니다.
-
-##### 6) 모니터링 및 피드백
-- **상황**: 배포가 완료된 후, Jenkins는 모니터링 도구로 Prometheus, Grafana를 사용해 애플리케이션 상태를 확인하고, Slack 또는 이메일을 통해 개발자에게 피드백을 제공합니다.
-- **결과**: 애플리케이션이 정상적으로 배포되었는지 확인하고, 문제가 있을 경우 즉시 알림을 받아 대응할 수 있습니다.
+##### 5) Kubernetes Canary 무중단 배포
+- **상황**:  Jenkins는 Kubernetes 클러스터에 해당 이미지를 배포합니다. 각 파이프라인은 Kubernetes YAML 파일(`k8s-frontend.yml`, `k8s-backend.yml`)을 사용해 Deployment와 Service, Ingress Controller를 생성합니다.
+- **과정**: Jenkins 파이프라인이 새로운 애플리케이션 버전을 배포할 때, Ingress Controller에 weight 값을 설정하여 트래픽의 일부만 새 버전으로 라우팅되도록 설정합니다. 초기 테스트에서 문제가 발견되지 않으면, weight 값을 점진적으로 증가시켜 더 많은 트래픽을 새로운 버전으로 전환합니다. 모든 테스트와 모니터링에서 문제가 없다고 판단되면, 최종적으로 모든 트래픽을 새로운 버전으로 전환합니다
+- **결과**: Kubernetes 클러스터에서 새로운 버전의 애플리케이션이 무중단으로 배포되며, 이전 버전은 점진적으로 제거됩니다. 최신 이미지를 사용한 애플리케이션이 안정적으로 전체 사용자에게 배포됩니다.
 
 <br>
 <br>
@@ -143,3 +140,86 @@ CI/CD 파이프라인은 GitHub 저장소에 `feature` 단위의 `merge`를 받�
 
 #### vs. A/B 테스트
 - **기능 검증과 안정성**: A/B 테스트는 주로 기능의 효과나 사용자 선호도를 테스트하는 데 사용되며, Canary 배포는 시스템 전체의 안정성을 보장하는 데 중점을 둡니다. 인사 관리와 일정 관리 시스템에서는 새로운 기능의 안정성과 성능이 중요하므로, 이러한 측면에서 Canary 배포가 더 적합합니다.
+
+# 📑 기능 테스트
+
+<details>
+  <summary><b>Git push 쿠버네티스 리소스 생성</b></summary>
+  <div markdown="1">
+   <br>
+    <ul>
+    
+![git-push-후-파드-생성 (1)](https://github.com/user-attachments/assets/309a3a33-3b87-404d-b742-c66d4f1a7abc)
+
+  </div>
+</details>
+
+<details>
+  <summary><b>Canary 무중단 배포 버전 변환</b></summary>
+  <div markdown="1">
+   <br>
+    <ul>
+	    
+![버전 변한 카나리](https://github.com/user-attachments/assets/82102f83-5411-4430-88be-574a70e920df)
+ 
+  </div>
+</details>
+
+--- 
+
+### ✨BACKEND
+
+<details>
+  <summary><b>Backend Canary 무중단 배포</b></summary>
+  <div markdown="1">
+   <br>
+    <ul>
+	    
+![backend-카나리-무중단 (1)](https://github.com/user-attachments/assets/aa3ffb66-e468-4b77-a8c2-0e6459a710ec)
+	    
+
+  </div>
+</details>
+
+<details>
+  <summary><b>Pipeline</b></summary>
+  <div markdown="1">
+   <br>
+    <ul>
+	
+
+https://github.com/user-attachments/assets/2b9b16bf-56cd-4262-a3e1-054f0c81f271
+
+    
+
+  </div>
+</details>
+
+--- 
+
+### ✨FRONTEND
+
+<details>
+  <summary><b>Canary 무중단 배포</b></summary>
+  <div markdown="1">
+   <br>
+    <ul>
+	    
+![front-카나리-무중단 (1)](https://github.com/user-attachments/assets/6f754854-7198-4af1-948e-6200ca30e075)
+
+  </div>
+</details>
+
+<details>
+  <summary><b>Pipeline</b></summary>
+  <div markdown="1">
+   <br>
+    <ul>
+	    
+![프론트 파이프라인](https://github.com/user-attachments/assets/b939d0ca-6acc-4e09-be72-1b6879dc11b2)
+
+
+  </div>
+</details>
+
+
