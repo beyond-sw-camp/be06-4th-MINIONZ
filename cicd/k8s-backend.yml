@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minionz-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      type: minionz-backend
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        type: minionz-backend
+    spec:
+      containers:
+        - name: container
+          image: minionz/backend:latest
+      terminationGracePeriodSeconds: 3
