@@ -6,12 +6,16 @@
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
 
+console.log("v2");
+  
 export default {
   name: "App",
   components: {
     HelloWorld,
   },
+  computed: {},
 };
+
 </script>
 
 <style>
